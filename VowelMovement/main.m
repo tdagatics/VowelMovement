@@ -24,6 +24,15 @@ int main(int argc, const char * argv[])
         void (^devowelizer)(id, NSUInteger, BOOL *);
         
         devowelizer = ^(id string, NSUInteger i, BOOL *stop) {
+            
+            NSRange yRange = [string rangeOfString:@"y" options: NSCaseInsensitiveSearch];
+            
+            // Did I find a "y"?
+            
+            if (yRange.location != NSNotFound) {
+                *stop = YES; // Prevent further iteration
+                return; // Ends this iteration
+            }
             NSMutableString *newString = [NSMutableString stringWithString:string];
             
             for (NSString *s in vowels) {
@@ -32,7 +41,11 @@ int main(int argc, const char * argv[])
             }
             
             [devowelizedStrings addObject:newString];
-        }; // End of lbock assignment
+        }; // End of block assignment
+        
+        // Iterate over the array with your block
+        [originalStrings enumerateObjectsUsingBlock:devowelizer];
+        NSLog(@"The devowelized string is %@", devowelizedStrings);
     }
     return 0;
 }
